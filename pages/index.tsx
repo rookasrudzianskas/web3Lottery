@@ -2,11 +2,12 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import Header from "../components/Header";
-import { useAddress, useDisconnect, useMetamask } from "@thirdweb-dev/react";
+import {useAddress, useContract, useDisconnect, useMetamask} from "@thirdweb-dev/react";
 import LoginScreen from "../components/LoginScreen";
 
 const Home: NextPage = () => {
     const address = useAddress();
+    const { contract, isLoading } = useContract(process.env.NEXT_PUBLIC_LOTTERY_CONTRACT_ADDRESS);
 
     if(!address) return (<LoginScreen />)
     return (
