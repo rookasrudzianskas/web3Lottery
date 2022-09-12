@@ -9,6 +9,7 @@ import Loading from "../components/Loading";
 import {useState} from "react";
 import { ethers } from 'ethers';
 import {currency} from "../constance";
+import CountDownTimer from "../components/CountDownTimer";
 
 const Home: NextPage = () => {
     const address = useAddress();
@@ -17,7 +18,9 @@ const Home: NextPage = () => {
     const { data: remainingTickets } = useContractData(contract, "RemainingTickets");
     const { data: currentWinningReward } = useContractData(contract, "CurrentWinningReward");
     const { data: ticketPrice } = useContractData(contract, "ticketPrice");
-    const { data: ticketCommission } = useContractData(contract, "ticketCommission")
+    const { data: ticketCommission } = useContractData(contract, "ticketCommission");
+    const { data: expiration } = useContractData(contract, "expiration");
+
 
     if(!address) return (<LoginScreen />)
     if(isLoading) return (<Loading />)
@@ -48,8 +51,9 @@ const Home: NextPage = () => {
                         </div>
                     </div>
 
-                    <div>
+                    <div className="mt-5 mb-3">
                         {/*    countdown */}
+                        <CountDownTimer />
                     </div>
                 </div>
 
@@ -89,7 +93,7 @@ const Home: NextPage = () => {
                                 <p>TBC</p>
                             </div>
                         </div>
-                        <button disabled={false} className="mt-5 w-full bg-gradient-to-br from-orange-500 to-emerald-600 px-10 py-5 rounded-md text-white shadow-xl disabled:from-gray-600 disabled:text-gray-100 disabled:to-gray-500 disabled:cursor-not-allowed">
+                        <button disabled={expiration?.toString() < Date.now().toString() || remainingTickets?.toNumber() === 0} className="mt-5 w-full bg-gradient-to-br from-orange-500 to-emerald-600 px-10 py-5 rounded-md text-white shadow-xl disabled:from-gray-600 disabled:text-gray-100 disabled:to-gray-500 disabled:cursor-not-allowed">
                             Buy tickets
                         </button>
                     </div>
