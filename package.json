@@ -10,6 +10,9 @@
     "@emotion/styled": "^11.10.4",
     "@mui/icons-material": "^5.10.3",
     "@mui/material": "^5.10.4",
+    "@thirdweb-dev/react": "^2.9.7",
+    "@thirdweb-dev/sdk": "^2.4.9",
+    "ethers": "^5.7.0",
     "next": "latest",
     "react": "18.1.0",
     "react-dom": "18.1.0"

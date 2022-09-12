@@ -2,9 +2,14 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import Header from "../components/Header";
+import { useAddress, useDisconnect, useMetamask } from "@thirdweb-dev/react";
+import LoginScreen from "../components/LoginScreen";
 
 const Home: NextPage = () => {
-  return (
+    const address = useAddress();
+
+    if(!address) return (<LoginScreen />)
+    return (
     <div className="bg-[#091b18] min-h-screen flex flex-col">
       <Head>
         <title>Web3 Lottery</title>
