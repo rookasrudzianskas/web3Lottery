@@ -2,16 +2,22 @@ import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import Header from "../components/Header";
-import {useAddress, useContract, useDisconnect, useMetamask} from "@thirdweb-dev/react";
+import {useAddress, useContract, useContractData, useDisconnect, useMetamask} from "@thirdweb-dev/react";
 import LoginScreen from "../components/LoginScreen";
 import PropagateLoader from 'react-spinners/PropagateLoader';
 import Loading from "../components/Loading";
 import {useState} from "react";
+import { ethers } from 'ethers';
+import {currency} from "../constance";
 
 const Home: NextPage = () => {
     const address = useAddress();
     const { contract, isLoading } = useContract(process.env.NEXT_PUBLIC_LOTTERY_CONTRACT_ADDRESS);
     const [quantity, setQuantity] = useState<number>(1);
+    const { data: remainingTickets } = useContractData(contract, "RemainingTickets");
+    const { data: currentWinningReward } = useContractData(contract, "CurrentWinningReward");
+    const { data: ticketPrice } = useContractData(contract, "ticketPrice");
+    const { data: ticketCommission } = useContractData(contract, "ticketCommission")
 
     if(!address) return (<LoginScreen />)
     if(isLoading) return (<Loading />)
@@ -31,11 +37,14 @@ const Home: NextPage = () => {
                     <div className="flex justify-between p-2 space-x-2">
                         <div className="stats">
                             <h2 className="text-sm">Total Pool</h2>
-                            <p className="text-xl">0.1 MATIC</p>
+                            <p className="text-xl">
+                                {currentWinningReward && ethers.utils.formatEther(currentWinningReward.toString())}{" "}
+                                {currency}
+                            </p>
                         </div>
                         <div className="stats">
                             <h1>Tickets Remaining</h1>
-                            <p className="text-xl">100</p>
+                            <p className="text-xl">{remainingTickets?.toNumber()}</p>
                         </div>
                     </div>
 
@@ -48,7 +57,11 @@ const Home: NextPage = () => {
                     <div className="stats-container">
                         <div className="flex justify-between items-center text-white pb-2">
                             <h2 className="">Price per ticket</h2>
-                            <h2>0.01 MATIC</h2>
+                            <h2>
+                                {ticketPrice &&
+                                    ethers.utils.formatEther(ticketPrice?.toString())
+                                }{" "}{currency}
+                            </h2>
                         </div>
                         <div className="flex text-white items-center space-x-2 bg-[#091B18] border-[#004227] border p-4">
                             <p>TICKETS</p>
@@ -57,11 +70,18 @@ const Home: NextPage = () => {
                         <div className="space-y-2 mt-5">
                             <div className="flex items-center justify-between text-emerald-300 text-sm italic font-extrabold">
                                 <p>Total cost of tickets</p>
-                                <p>0.999999</p>
+                                <p>
+                                    {ticketPrice && (
+                                        Number(ethers.utils.formatEther(ticketPrice?.toString())) * quantity)}{" "} {currency}
+                                </p>
                             </div>
                             <div className="flex items-center justify-between text-emerald-300 text-xs italic">
                                 <p>Service fees</p>
-                                <p>0.01 MATIC</p>
+                                <p>
+                                    {ticketCommission &&
+                                        ethers.utils.formatEther(ticketCommission?.toString())
+                                    }{" "}{currency}
+                                </p>
                             </div>
 
                             <div className="flex items-center justify-between text-emerald-300 text-xs italic">
