@@ -39,11 +39,13 @@ const Home: NextPage = () => {
         const notification = toast.loading("Buying your transaction...");
 
         try {
-            const data = await BuyTickets({
-                value: ethers.utils.parseEther(
-                    (Number(ethers.utils.formatEther(ticketPrice)) * quantity).toString()
-                ),
-            });
+            const data = await BuyTickets([
+                {
+                    value: ethers.utils.parseEther(
+                        (Number(ethers.utils.formatEther(ticketPrice)) * quantity).toString()
+                    ),
+                },
+            ]);
             toast.success("Tickets purchased successfully!", {
                 id: notification,
             });
