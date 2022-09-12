@@ -7,7 +7,7 @@ type Props = {
 
 const NavButton = ({title, isActive}: Props) => {
     return (
-        <button className={`${isActive && 'bg-[#036756]'} text-white px-2 py-2 rounded hover:bg-[#036756] duration-150`}>
+        <button className={`${isActive && 'bg-[#036756]'} font-bold text-white px-2 py-2 rounded hover:bg-[#036756] duration-150`}>
             {title}
         </button>
     );
